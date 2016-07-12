@@ -59,13 +59,13 @@ public class VirtualDealer implements OnProgressListener {
 
 	private Boolean newProgress = false;
 
-	private List<String> hisProList = new ArrayList<String>(); // ´æ´¢Ä³¾ÖÅÆµÄÀúÊ··¢ÅÆĞÅÏ¢
+	private List<String> hisProList = new ArrayList<String>(); // å­˜å‚¨æŸå±€ç‰Œçš„å†å²å‘ç‰Œä¿¡æ¯
 
 	private GameRoundInfo lastGame, currentGame, designatedGame;
 
 	private Integer gameId = 0;
 
-	private int countDown = 0; // ÏÂ×¢µÈ´ıÊ±¼ä
+	private int countDown = 0; // ä¸‹æ³¨ç­‰å¾…æ—¶é—´
 
 	Map<String, LinkedList<ProgessBean>> progressCache = new HashMap<String, LinkedList<ProgessBean>>();
 
@@ -92,7 +92,7 @@ public class VirtualDealer implements OnProgressListener {
 		if (currentGame != null) {
 			pushStreamToRed5(currentGame, currentGame.getId() + "");
 			parseBJLProgessToCache(currentGame);
-			lastGame = currentGame; // ±£ÁôÉÏÒ»ÅÌÊı¾İ£¬ÒÔ±ãÓÚÅĞ¶ÏÊÇ·ñ»»Ñ¥
+			lastGame = currentGame; // ä¿ç•™ä¸Šä¸€ç›˜æ•°æ®ï¼Œä»¥ä¾¿äºåˆ¤æ–­æ˜¯å¦æ¢é´
 		}
 
 	}
@@ -111,20 +111,20 @@ public class VirtualDealer implements OnProgressListener {
 			}
 			for (ProgessBean pb : pbList) {
 				logger.info(pb);
-				if ("begin".equals(pb.getStatus())) { // ¿ªÊ¼ÏÂ×¢
+				if ("begin".equals(pb.getStatus())) { // å¼€å§‹ä¸‹æ³¨
 					sendStartCommond(game);
-				} else if ("dealing_wait".equals(pb.getStatus())) { // Í£Ö¹ÏÂ×¢
+				} else if ("dealing_wait".equals(pb.getStatus())) { // åœæ­¢ä¸‹æ³¨
 					sendDealingWaitCommond(game);
-				} else if ("deal".equals(pb.getStatus())) { // ·¢ÅÆ
+				} else if ("deal".equals(pb.getStatus())) { // å‘ç‰Œ
 					sendDealCommond(game, pb);
-				} else if ("end".equals(pb.getStatus())) { // ½áÊø
+				} else if ("end".equals(pb.getStatus())) { // ç»“æŸ
 					sendEndCommand(game);
-					if ("1".equals(game.getChargeShoe())) { // »»Ñ¥
+					if ("1".equals(game.getChargeShoe())) { // æ¢é´
 						sendChangeShoeidCommand(lastGame);
 					}
-				} else if ("interrupt".equals(pb.getStatus())) { // ÓĞÕÚµ²
+				} else if ("interrupt".equals(pb.getStatus())) { // æœ‰é®æŒ¡
 					sendInterruptCommand(game);
-				} else if ("nonterrupt".equals(pb.getStatus())) { // ÎŞÕÚµ²
+				} else if ("nonterrupt".equals(pb.getStatus())) { // æ— é®æŒ¡
 					sendNoInterruptCommand(game);
 				}
 			}
@@ -143,7 +143,7 @@ public class VirtualDealer implements OnProgressListener {
 		map.put("tableId", game.getRoomId());//
 		map.put("shoeId", game.getShoeid() + "");
 		synchronized (gameId) {
-			gameId = 0; // »»Ñ¥Ê±£¬gameIdÒªÇåÁã
+			gameId = 0; // æ¢é´æ—¶ï¼ŒgameIdè¦æ¸…é›¶
 		}
 		logger.info(mcp);
 		MinaGameInterface.ioSession.write(mcp);
@@ -201,7 +201,7 @@ public class VirtualDealer implements OnProgressListener {
 	 */
 	private void sendDealCommond(GameRoundInfo game, ProgessBean pb) {
 		if (newProgress) {
-			hisProList.clear(); // µ±Ò»¾ÖĞÂ¿ªÊ¼Ê±£¬ÏÈÇå³ıÀúÊ·¼ÍÂ¼
+			hisProList.clear(); // å½“ä¸€å±€æ–°å¼€å§‹æ—¶ï¼Œå…ˆæ¸…é™¤å†å²çºªå½•
 			newProgress = false;
 		}
 		hisProList.add(JsonUtil.object2Json(pb));
@@ -252,7 +252,7 @@ public class VirtualDealer implements OnProgressListener {
 		map.put("tableId", game.getRoomId());//
 		map.put("shoeId", game.getShoeid() + "");
 		map.put("gameId", ++gameId);
-		map.put("countDown", countDown);// ·¢ËÍÍ¶×¢µ¹¼ÆÊ±
+		map.put("countDown", countDown);// å‘é€æŠ•æ³¨å€’è®¡æ—¶
 		map.put("gameRoundInfoId", game.getId());
 		logger.info(mcp);
 		MinaGameInterface.ioSession.write(mcp);
@@ -351,15 +351,15 @@ public class VirtualDealer implements OnProgressListener {
 			list.add(bean);
 		}
 
-		// ¼ÆËãÍ¶×¢µÈ´ıµ¹¼ÆÊ±
+		// è®¡ç®—æŠ•æ³¨ç­‰å¾…å€’è®¡æ—¶
 		if (StringUtils.isNotEmpty(betStartTime) && StringUtils.isNotEmpty(betEndTime)) {
 			try {
 				long t1 = dateformat.parse(betStartTime).getTime();
 				long t2 = dateformat.parse(betEndTime).getTime();
 				int t = (int) (t2 - t1) / 1000;
-				countDown = (int) Math.round(t / 5d) * 5; // ÒÔ5ÃëÖÓÎª»ù×¼½øĞĞËÄÉáÎåÈë£¬Èç14Ãë±ä³É15Ãë£¬19Ãë±ä³É20Ãë£¬26Ãë±ä³É25Ãë
+				countDown = (int) Math.round(t / 5d) * 5; // ä»¥5ç§’é’Ÿä¸ºåŸºå‡†è¿›è¡Œå››èˆäº”å…¥ï¼Œå¦‚14ç§’å˜æˆ15ç§’ï¼Œ19ç§’å˜æˆ20ç§’ï¼Œ26ç§’å˜æˆ25ç§’
 				logger.info(
-						"ÏÂ×¢µ¹¼ÆÊ±=====>" + countDown + " ¿ªÊ¼ÏÂ×¢Ê±¼ä=====>" + betStartTime + " ½áÊøÏÂ×¢Ê±¼ä======>" + betEndTime);
+						"ä¸‹æ³¨å€’è®¡æ—¶=====>" + countDown + " å¼€å§‹ä¸‹æ³¨æ—¶é—´=====>" + betStartTime + " ç»“æŸä¸‹æ³¨æ—¶é—´======>" + betEndTime);
 			} catch (ParseException e) {
 				logger.error("", e);
 			}
@@ -368,8 +368,8 @@ public class VirtualDealer implements OnProgressListener {
 
 	public int controlNextMatch(String result) {
 		designatedGame = DBHelper.getHelper().getDesignatedGame(currentGame, "WIN".equalsIgnoreCase(result) ? 1 : 2);
-
-		logger.info("The next match is changed[" + result + "]£º\n currentGame==>" + currentGame + "\n designatedGame==>"
+		CardCache.getCache().reset(designatedGame.getOriginalShoeId(), designatedGame.getGameId()+1);
+		logger.info("The next match is changed[" + result + "]ï¼š\n currentGame==>" + currentGame + "\n designatedGame==>"
 				+ designatedGame);
 		return designatedGame == null ? -1 : designatedGame.getId();
 	}

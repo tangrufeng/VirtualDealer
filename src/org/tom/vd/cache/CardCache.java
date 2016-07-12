@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.log4j.Logger;
 import org.tom.vd.VirtualDealer;
 import org.tom.vd.bean.GameRoundInfo;
@@ -33,11 +34,19 @@ public class CardCache {
         startShoeId=Integer.parseInt(strStartShoeId);
         startGameId=Integer.parseInt(strStartGameId);
     }
+    
 
     public static CardCache getCache() {
         return instance;
     }
 
+    public void reset(int startShoeId,int startGameId){
+    	this.startShoeId=startShoeId;
+    	this.startGameId=startGameId;
+    	queue.clear();
+        new FillQueueThread().start();
+    }
+    
     /**
      * @return
      */

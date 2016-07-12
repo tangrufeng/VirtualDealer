@@ -65,8 +65,8 @@ public class PlatformMinaHandler extends IoHandlerAdapter {
 				param.put("returnCode", result);
 				po.setModuleType("AP");
 				po.setRequestType("REQUEST");
-				logger.debug("ApCommand.TABLE_CONTROL End=========>" + param);
-				logger.debug("ApCommand.TABLE_CONTROL PO=========>"
+				logger.info("ApCommand.TABLE_CONTROL End=========>" + param);
+				logger.info("ApCommand.TABLE_CONTROL PO=========>"
 						+ po.getParameter());
 				MinaGameInterface.ioSession.write(po);
 			}

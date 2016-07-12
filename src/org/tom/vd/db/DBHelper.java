@@ -13,7 +13,7 @@ import org.tom.vd.bean.GameRoundInfo;
 import org.tom.vd.config.Config;
 
 /*
- * @date 2016-1-10 ÏÂÎç2:43:33
+ * @date 2016-1-10 ä¸‹åˆ2:43:33
  * @version 1.0
  * 
  */
@@ -27,11 +27,11 @@ public class DBHelper {
 
     private DBHelper() {
         try {
-            Class.forName(cfg.getString("jdbc.driverClassName"));// Ö¸¶¨Á¬½ÓÀàĞÍ
+            Class.forName(cfg.getString("jdbc.driverClassName"));// æŒ‡å®šè¿æ¥ç±»å‹
             connDB();
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         }
     }
 
@@ -39,17 +39,17 @@ public class DBHelper {
         try {
             conn = DriverManager.getConnection(cfg.getString("jdbc.url"),
                     cfg.getString("jdbc.username"),
-                    cfg.getString("jdbc.userpassword"));// »ñÈ¡Á¬½Ó
+                    cfg.getString("jdbc.userpassword"));// è·å–è¿æ¥
             PreparedStatement ps = conn.prepareStatement("select 1 from dual");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 if (1 == rs.getInt(1)) {
-                    log.error("Êı¾İ¿âÁ¬½Ó³É¹¦...");
+                    log.error("æ•°æ®åº“è¿æ¥æˆåŠŸ...");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         }
     }
 
@@ -69,7 +69,7 @@ public class DBHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -103,7 +103,7 @@ public class DBHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -112,7 +112,7 @@ public class DBHelper {
                 }
             }
         }
-        return 1;//Èç¹ûÃ»ÓĞÕÒµ½£¬¾Í·µ»ØµÚÒ»Ñ¥
+        return 1;//å¦‚æœæ²¡æœ‰æ‰¾åˆ°ï¼Œå°±è¿”å›ç¬¬ä¸€é´
     }
 
 
@@ -133,7 +133,7 @@ public class DBHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -142,7 +142,7 @@ public class DBHelper {
                 }
             }
         }
-        return 1;//Èç¹ûÃ»ÓĞÕÒµ½£¬¾Í·µ»ØµÚÒ»Ñ¥
+        return 1;//å¦‚æœæ²¡æœ‰æ‰¾åˆ°ï¼Œå°±è¿”å›ç¬¬ä¸€é´
     }
 
 
@@ -155,13 +155,15 @@ public class DBHelper {
             int offSet = Integer.parseInt(Config.getCfg().getString(
                     "sql.gameOffset"));
             ps = conn.prepareStatement(cfg.getString("sql.getDesignatedGame"));
-            ps.setInt(1, currentGame.getGameId() - offSet);
-            ps.setInt(2, currentGame.getGameId() + offSet);
-            ps.setString(3, currentGame.getGameType());
-            ps.setString(4, currentGame.getCardBGColor());
-            ps.setInt(5, currentGame.getRoomId());
-            ps.setInt(6, currentGame.getDealer());
-            ps.setInt(7, currentGame.getOriginalShoeId());
+            int i=1;
+            ps.setInt(i++, result);
+            ps.setInt(i++, currentGame.getGameId() - offSet);
+            ps.setInt(i++, currentGame.getGameId() + offSet);
+            ps.setString(i++, currentGame.getGameType());
+            ps.setString(i++, currentGame.getCardBGColor());
+            ps.setInt(i++, currentGame.getRoomId());
+            ps.setInt(i++, currentGame.getDealer());
+            ps.setInt(i++, currentGame.getOriginalShoeId());
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -170,7 +172,7 @@ public class DBHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -183,7 +185,7 @@ public class DBHelper {
     }
 
     /**
-     * »ñÈ¡Ä³Ò»Ñ¥µÄ´óÓÚµÈÓÚÄ³¾ÖµÄÅÆ¾ÖÁĞ±í
+     * è·å–æŸä¸€é´çš„å¤§äºç­‰äºæŸå±€çš„ç‰Œå±€åˆ—è¡¨
      *
      * @param shoeId
      * @param gameId
@@ -207,7 +209,7 @@ public class DBHelper {
                 rst.add(g);
             }
         } catch (SQLException e) {
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -238,7 +240,7 @@ public class DBHelper {
                 rst.add(g);
             }
         } catch (SQLException e) {
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
@@ -264,7 +266,7 @@ public class DBHelper {
             ps.setInt(3, Integer.parseInt(tableId));
             ps.executeUpdate();
         } catch (SQLException e) {
-            log.error("Á¬½ÓÊı¾İ¿âÊ§°Ü", e);
+            log.error("è¿æ¥æ•°æ®åº“å¤±è´¥", e);
         } finally {
             if (ps != null) {
                 try {
